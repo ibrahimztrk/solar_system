@@ -1,0 +1,15 @@
+{
+  "name": "solar-system",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node post-build.js",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.14.0",
+    "@astrojs/tailwind": "^5.1.0",
+    "tailwindcss": "^3.4.0"
+  }
+}

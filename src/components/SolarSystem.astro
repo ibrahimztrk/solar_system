@@ -1,0 +1,407 @@
+<div id="app" class="flex flex-col md:flex-row items-center justify-center gap-4 p-4 w-full max-w-6xl mx-auto">
+  <div id="cw" class="relative flex-1 min-w-0 bg-[#030810] rounded-2xl overflow-hidden">
+    <canvas id="cv" class="block cursor-crosshair"></canvas>
+    <div id="dov" class="absolute left-4 top-4 pointer-events-none font-mono text-xs text-slate-400/75 tracking-wider"></div>
+    <div id="mind" class="absolute right-4 top-4 pointer-events-none font-mono text-[10px] uppercase tracking-widest"></div>
+    <div id="tip" class="pointer-events-none hidden absolute z-[9] min-w-[160px] rounded-xl border border-[rgba(99,150,255,.2)] bg-[#030810]/97 px-4 py-3 backdrop-blur-sm shadow-lg shadow-black/40"></div>
+  </div>
+
+  <div id="panel" class="flex flex-col gap-5 w-[260px] rounded-2xl border border-white/5 bg-white/[0.03] p-5">
+    <div id="title-bar" class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <svg class="w-6 h-6 text-yellow-400/80 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3" fill="currentColor"/><ellipse cx="12" cy="12" rx="10" ry="6" opacity=".3"/><ellipse cx="12" cy="12" rx="10" ry="6" transform="rotate(60 12 12)" opacity=".3"/><ellipse cx="12" cy="12" rx="10" ry="6" transform="rotate(120 12 12)" opacity=".3"/></svg>
+        <span class="text-sm font-semibold tracking-tight text-slate-200" id="title-text">Solar System</span>
+      </div>
+      <button id="langbtn" class="ml-2 rounded-md px-2 py-1 text-xs font-medium border border-white/10 bg-white/5 text-slate-400 cursor-pointer transition-colors hover:bg-white/10" title="Toggle language">TR</button>
+    </div>
+
+    <!-- mode tabs -->
+    <div id="tabs-wrap" class="flex gap-0.5 rounded-lg bg-white/5 p-0.5">
+      <button class="tab flex-1 rounded-md px-2 py-1.5 cursor-pointer text-[11px] font-medium tracking-wide transition-all text-slate-500 on" id="t1" data-i18n-key="liveTab">▶ Live Orbit</button>
+      <button class="tab flex-1 rounded-md px-2 py-1.5 cursor-pointer text-[11px] font-medium tracking-wide transition-all text-slate-500" id="t2" data-i18n-key="dateTab">◎ Date</button>
+    </div>
+
+    <!-- live controls -->
+    <div id="lp" class="flex flex-col gap-3">
+      <button id="ppbtn" class="w-10 h-10 rounded-full border border-white/10 bg-white/5 text-blue-400 flex items-center justify-center text-lg cursor-pointer transition-colors hover:bg-white/10 mx-auto">▶</button>
+      <input type="range" id="spdr" class="w-full" min="-60" max="50" step=".5" value="-35.6" />
+      <div class="flex justify-between items-center text-[10px] uppercase text-slate-500 font-mono">
+        <span data-i18n-key="speed">Speed</span>
+        <span id="spdv" class="text-amber-400/80 text-[11px]"></span>
+      </div>
+    </div>
+
+    <!-- date mode -->
+    <div id="dp" class="hidden flex flex-col gap-3">
+      <div class="text-[11px] font-medium text-slate-400" data-i18n-key="dateHint">Pick a date to explore</div>
+      <div id="caldrop" class="relative">
+        <input type="date" id="dinput" class="w-full rounded-lg border border-white/10 bg-black/20 text-[13px] px-3 py-2 text-slate-200 outline-none focus:border-blue-500/40 appearance-none cursor-pointer" />
+      </div>
+      <div class="flex gap-2">
+        <button id="gbtn" class="flex-1 rounded-lg px-3 py-2 text-[12px] font-medium cursor-pointer transition-colors bg-blue-500/10 border border-blue-500/20 text-blue-300 hover:bg-blue-500/20 text-center" data-i18n-key="showBtn">Show Position</button>
+        <button id="rbtn" class="flex-1 rounded-lg px-3 py-2 text-[12px] font-medium cursor-pointer transition-colors bg-emerald-500/10 border border-emerald-500/20 text-emerald-300 hover:bg-emerald-500/20 text-center" data-i18n-key="playBtn">Play from Here</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #app {
+    transition: flex-direction 0.3s ease;
+  }
+
+  .tab.on {
+    background: rgba(59, 130, 246, 0.18);
+    color: #93c5fd;
+  }
+
+  /* date picker dark browser chrome */
+  #dinput::-webkit-calendar-picker-indicator { filter: invert(1); opacity: .6; cursor: pointer; }
+  #dinput::-moz-calendar-picker-indicator { filter: invert(1); }
+
+  @media (max-width: 700px) {
+    #app {
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px;
+    }
+    #panel {
+      width: 100%;
+      flex-direction: row;
+      flex-wrap: wrap;
+      padding: 14px 16px;
+      gap: 10px 14px;
+    }
+    #title-bar { flex: 1 1 100%; }
+    #tabs-wrap { order: 1; }
+    #lp { flex: 1; order: 2; }
+    #dp { flex: 1; order: 2; }
+  }
+</style>
+
+<script define:vars={{}}>
+(function(){
+
+const I18N = {
+  en: {
+    title: 'Solar System',
+    liveTab: '▶ Live Orbit',
+    dateTab: '◎ Date',
+    speed: 'Speed',
+    dateHint: 'Pick a date to explore',
+    showBtn: 'Show Position',
+    playBtn: 'Play from Here',
+    days: 'days',
+    yrs: 'yrs',
+    period: 'Period',
+    angle: 'Angle',
+    distance: 'Distance',
+    liveMind: 'LIVE',
+    dateMind: 'DATE',
+    locale: 'en-US',
+    lang: 'EN',
+    d2sOpts: { year: 'numeric', month: 'short', day: 'numeric' },
+  },
+  tr: {
+    title: 'Güneş Sistemi',
+    liveTab: '▶ Canlı Yörünge',
+    dateTab: '◎ Tarih',
+    speed: 'Hız',
+    dateHint: 'Keşfetmek için bir tarih seçin',
+    showBtn: 'Konumu Göster',
+    playBtn: 'Buradan Başlat',
+    days: 'gün',
+    yrs: 'yıl',
+    period: 'Dönem',
+    angle: 'Açı',
+    distance: 'Mesafe',
+    liveMind: 'CANLI',
+    dateMind: 'TARİH',
+    locale: 'tr-TR',
+    lang: 'TR',
+    d2sOpts: { year: 'numeric', month: 'long', day: 'numeric' },
+  },
+};
+
+const PL = {
+  en: [
+    {n:'Mercury',tr:'Merkür',p:87.969,   L0:252.25,c:'#9ca3af',f:.175,sz:2.5, au:.387},
+    {n:'Venus',tr:'Venüs',p:224.701,  L0:181.98,c:'#f59e0b',f:.275,sz:4.2, au:.723},
+    {n:'Earth',tr:'Dünya',p:365.256,  L0:100.46,c:'#3b82f6',f:.378,sz:4.5, au:1.000},
+    {n:'Mars',tr:'Mars',p:686.971,  L0:355.45,c:'#ef4444',f:.493,sz:3.3, au:1.524},
+    {n:'Jupiter',tr:'Jüpiter',p:4332.589, L0:34.40, c:'#ca8a04',f:.632,sz:10,  au:5.203,big:1},
+    {n:'Saturn',tr:'Satürn',p:10759.22, L0:49.94, c:'#c0864a',f:.750,sz:8,   au:9.537,big:1,ring:1},
+    {n:'Uranus',tr:'Uranüs',p:30688.5,  L0:313.23,c:'#22d3ee',f:.850,sz:5.5, au:19.19},
+    {n:'Neptune',tr:'Neptün',p:60182.0,  L0:304.88,c:'#818cf8',f:.928,sz:5.2, au:30.07},
+  ],
+  tr: null, // resolved via .tr prop
+};
+PL.tr = PL.en.map(p => ({...p, n: p.tr}));
+
+// Moon orbits Earth, not the Sun
+const MOON = {
+  p: 27.322,     // sidereal period in days
+  L0: 218.32,    // mean longitude at J2000
+  c: '#d1d5db',  // silver-gray
+  sz: 1.8,       // size
+};
+
+let lang = 'en';
+const $ = id => document.getElementById(id);
+
+function t(key) { return I18N[lang][key]; }
+function planets() { return PL[lang]; }
+
+function toggleLang() {
+  lang = lang === 'en' ? 'tr' : 'en';
+  document.querySelectorAll('[data-i18n-key]').forEach(el => {
+    const key = el.getAttribute('data-i18n-key');
+    if (I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  $('title-text').textContent = t('title');
+  $('langbtn').textContent = lang === 'en' ? 'TR' : 'EN';
+  $('mind').textContent = mode === 'live' ? '● ' + t('liveMind') : '◎ ' + t('dateMind');
+  updateSpdLabel();
+  $('dov').textContent = d2s((mode === 'date' && frozen !== null) ? frozen : simDays);
+}
+
+const PL_EN = PL.en;
+
+const J0 = new Date('2000-01-01T12:00:00Z').getTime();
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+let CX, CY, MR,
+    simDays = (Date.now() - J0) / 864e5,
+    frozen = null,
+    playing = 1,
+    dpf = 10,
+    mode = 'live',
+    hov = -1,
+    stars = [],
+    raf;
+
+function resize() {
+  const cw = document.getElementById('cw');
+  const header = 32;
+  const isMobile = window.innerWidth < 768;
+  let maxSide;
+  if (isMobile) {
+    maxSide = Math.min(window.innerWidth - 40, window.innerHeight * 0.48) - header;
+  } else {
+    const panelWidth = 292;
+    const gaps = 48;
+    maxSide = Math.min(window.innerWidth - panelWidth - gaps, window.innerHeight - header);
+  }
+  const W = Math.max(Math.min(cw.offsetWidth, maxSide), 280);
+  cv.width = cv.height = W;
+  cv.style.width = cv.style.height = W + 'px';
+  CX = CY = W / 2;
+  MR = W * .44;
+  stars = [];
+  const n = ~~(W * W / 2000);
+  for (let i = 0; i < n; i++)
+    stars.push([Math.random() * W, Math.random() * W, Math.random() * 1.3, .15 + Math.random() * .75]);
+}
+
+function ang(pl, d) {
+  return (((pl.L0 + 360 / pl.p * d) % 360) + 360) % 360;
+}
+
+function ppos(pl, d) {
+  const a = ang(pl, d) * Math.PI / 180, r = pl.f * MR;
+  return [CX + r * Math.sin(a), CY - r * Math.cos(a)];
+}
+
+function d2s(d) {
+  return new Date(J0 + d * 864e5).toLocaleDateString(t('locale'), t('d2sOpts'));
+}
+
+function s2d(s) {
+  return (new Date(s + 'T12:00:00Z').getTime() - J0) / 864e5;
+}
+
+function draw() {
+  const W = cv.width;
+  const pl = planets();
+  ctx.fillStyle = '#030810'; ctx.fillRect(0, 0, W, W);
+  for (const [x, y, r, a] of stars) {
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 6.283);
+    ctx.fillStyle = `rgba(255,255,255,${a})`; ctx.fill();
+  }
+  pl.forEach((p, i) => {
+    ctx.beginPath(); ctx.arc(CX, CY, p.f * MR, 0, 6.283);
+    ctx.strokeStyle = hov === i ? 'rgba(80,130,220,.32)' : 'rgba(80,130,220,.18)';
+    ctx.lineWidth = 1;
+    ctx.setLineDash([4, 4]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+  });
+  // Sun
+  const SR = MR * .032;
+  let g = ctx.createRadialGradient(CX, CY, 0, CX, CY, SR * 5);
+  g.addColorStop(0, 'rgba(255,215,60,.6)');
+  g.addColorStop(.4, 'rgba(255,160,20,.2)');
+  g.addColorStop(1, 'rgba(255,100,0,0)');
+  ctx.beginPath(); ctx.arc(CX, CY, SR * 5, 0, 6.283); ctx.fillStyle = g; ctx.fill();
+  ctx.beginPath(); ctx.arc(CX, CY, SR, 0, 6.283); ctx.fillStyle = '#fbbf24'; ctx.fill();
+  ctx.beginPath(); ctx.arc(CX, CY, SR * .58, 0, 6.283); ctx.fillStyle = '#fef9c3'; ctx.fill();
+  // Planets
+  const days = (mode === 'date' && frozen !== null) ? frozen : simDays;
+  const sc = W / 560;
+  pl.forEach((p, i) => {
+    const [px, py] = ppos(pl[i], days);
+    const isH = hov === i;
+    const sz = p.sz * sc;
+    if (p.ring) {
+      ctx.save(); ctx.translate(px, py); ctx.scale(1, .30);
+      ctx.beginPath(); ctx.arc(0, 0, sz * 1.95, 0, 6.283);
+      ctx.strokeStyle = 'rgba(192,134,74,.48)'; ctx.lineWidth = sz * .58 / .30; ctx.stroke();
+      ctx.beginPath(); ctx.arc(0, 0, sz * 2.42, 0, 6.283);
+      ctx.strokeStyle = 'rgba(192,134,74,.22)'; ctx.lineWidth = sz * .26 / .30; ctx.stroke();
+      ctx.restore();
+    }
+    if (p.big || p.ring) {
+      const eg = ctx.createRadialGradient(px, py, 0, px, py, sz * 2.8);
+      eg.addColorStop(0, p.c + '2a'); eg.addColorStop(1, p.c + '00');
+      ctx.beginPath(); ctx.arc(px, py, sz * 2.8, 0, 6.283); ctx.fillStyle = eg; ctx.fill();
+    }
+    ctx.beginPath(); ctx.arc(px, py, sz * (isH ? 1.38 : 1), 0, 6.283);
+    ctx.fillStyle = p.c; ctx.fill();
+    if (isH) { ctx.strokeStyle = p.c + '88'; ctx.lineWidth = 1.5; ctx.stroke(); }
+    const lo = (sz + (p.ring ? sz * 1.8 : 7)) * Math.max(sc, .85);
+    ctx.font = `${isH ? 500 : 400} ${Math.max(8.5, 10 * sc)}px -apple-system,sans-serif`;
+    ctx.fillStyle = isH ? 'rgba(226,232,240,.95)' : 'rgba(148,163,184,.58)';
+    ctx.textAlign = px > CX ? 'left' : 'right';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(p.n, px > CX ? px + lo : px - lo, py);
+  });
+  // Moon
+  const earthIdx = 2;
+  const earthData = planets()[earthIdx];
+  const [ex, ey] = ppos(earthData, days);
+  const moonA = (((MOON.L0 + 360 / MOON.p * days) % 360) + 360) % 360;
+  const moonAngle = moonA * Math.PI / 180;
+  const moonR = MR * .06; // moon orbital radius proportional to canvas
+  const mX = ex + moonR * Math.sin(moonAngle);
+  const mY = ey - moonR * Math.cos(moonAngle);
+  // Moon orbit path
+  ctx.beginPath(); ctx.arc(ex, ey, moonR, 0, 6.283);
+  ctx.strokeStyle = 'rgba(209,213,219,.12)'; ctx.lineWidth = .7;
+  ctx.setLineDash([3, 3]); ctx.stroke(); ctx.setLineDash([]);
+  // Moon body
+  const mSz = MOON.sz * Math.max(sc, .5);
+  ctx.beginPath(); ctx.arc(mX, mY, mSz, 0, 6.283);
+  ctx.fillStyle = MOON.c; ctx.fill();
+  ctx.beginPath(); ctx.arc(mX, mY, mSz * .6, 0, 6.283);
+  ctx.fillStyle = '#e5e7eb'; ctx.fill();
+  ctx.font = `${Math.max(7.5, 9 * sc)}px -apple-system,sans-serif`;
+  ctx.fillStyle = 'rgba(209,213,219,.45)';
+  ctx.textAlign = mX > ex ? 'left' : 'right'; ctx.textBaseline = 'middle';
+  ctx.fillText(lang === 'tr' ? 'Ay' : 'Moon', mX > ex ? mX + mSz + 4 : mX - mSz - 4, mY);
+
+  $('dov').textContent = d2s(days);
+}
+
+function loop() {
+  if (playing && mode === 'live') simDays += dpf;
+  draw();
+  raf = requestAnimationFrame(loop);
+}
+
+function setSpd(v) {
+  dpf = Math.pow(10, v / 20);
+  const dps = dpf * 60;
+  let lbl;
+  const perTag = dps < 1 ? t('days') + '/s' : dps < 3652 ? t('days') + '/s' : t('yrs') + '/s';
+  if (dps < 1) lbl = dps.toFixed(2) + ' ' + perTag;
+  else if (dps < 30) lbl = dps.toFixed(1) + ' ' + perTag;
+  else if (dps < 3652) lbl = Math.round(dps) + ' ' + perTag;
+  else lbl = Math.round(dps / 365.25) + ' ' + perTag;
+  $('spdv').textContent = lbl;
+}
+
+function updateSpdLabel() { setSpd($('spdr').value); }
+
+function togglePlay() {
+  playing = !playing;
+  document.getElementById('ppbtn').textContent = playing ? '⏸' : '▶';
+}
+
+function setMode(m) {
+  mode = m;
+  $('t1').classList.toggle('on', m === 'live');
+  $('t2').classList.toggle('on', m === 'date');
+  $('lp').style.display = m === 'live' ? 'flex' : 'none';
+  $('dp').style.display = m === 'date' ? 'flex' : 'none';
+  const mi = $('mind');
+  mi.textContent = m === 'live' ? '● ' + t('liveMind') : '◎ ' + t('dateMind');
+  mi.style.color = m === 'live' ? '#22d3ee' : '#f59e0b';
+  if (m === 'live') frozen = null;
+}
+
+function jumpDate() {
+  const v = document.getElementById('dinput').value;
+  if (v) { frozen = s2d(v); }
+}
+
+function runFrom() {
+  const v = document.getElementById('dinput').value;
+  simDays = frozen !== null ? frozen : (v ? s2d(v) : simDays);
+  frozen = null; playing = 1;
+  setMode('live');
+  document.getElementById('ppbtn').textContent = '⏸';
+}
+
+// Events
+cv.addEventListener('mousemove', (e) => {
+  const r = cv.getBoundingClientRect();
+  const mx = (e.clientX - r.left) * (cv.width / r.width);
+  const my = (e.clientY - r.top) * (cv.height / r.height);
+  const pl = planets();
+  const days = (mode === 'date' && frozen !== null) ? frozen : simDays;
+  hov = -1;
+  const tip = $('tip');
+  pl.forEach((p, i) => {
+    const [px, py] = ppos(pl[i], days);
+    const sz = p.sz * (cv.width / 560);
+    if (Math.hypot(mx - px, my - py) < sz + 14) {
+      hov = i;
+      const per = p.p < 365 ? p.p.toFixed(1) + ' ' + t('days') : (p.p / 365.25).toFixed(2) + ' ' + t('yrs');
+      const a = ang(pl[i], days).toFixed(1);
+      tip.innerHTML = `<div style="color:${p.c};font-family:monospace;font-weight:700;margin-bottom:7px;font-size:12px">${p.n}</div>` +
+        `<div style="font-size:11px;line-height:2;color:#64748b">` +
+        `${t('period')}<span style="float:right;color:#94a3b8">${per}</span><br>` +
+        `${t('angle')}<span style="float:right;color:#94a3b8">${a}°</span><br>` +
+        `${t('distance')}<span style="float:right;color:#94a3b8">${p.au} AU</span></div>`;
+      tip.style.display = 'block';
+      let tx = (e.clientX - r.left) + 14, ty = (e.clientY - r.top) - 10;
+      if (tx + 168 > r.width) tx -= 188;
+      if (ty < 0) ty = 4;
+      tip.style.left = tx + 'px'; tip.style.top = ty + 'px';
+    }
+  });
+  if (hov < 0) tip.style.display = 'none';
+});
+cv.addEventListener('mouseleave', () => { hov = -1; $('tip').style.display = 'none'; });
+
+// Init
+$('dinput').value = new Date().toISOString().split('T')[0];
+$('mind').textContent = '● ' + t('liveMind');
+$('mind').style.color = '#22d3ee';
+resize(); setSpd(-35.6); loop();
+window.addEventListener('resize', () => { cancelAnimationFrame(raf); resize(); loop(); });
+
+// Tab clicks
+$('t1').addEventListener('click', () => setMode('live'));
+$('t2').addEventListener('click', () => setMode('date'));
+
+// Controls
+$('ppbtn').addEventListener('click', togglePlay);
+$('spdr').addEventListener('input', (e) => setSpd(+e.target.value));
+$('gbtn').addEventListener('click', jumpDate);
+$('rbtn').addEventListener('click', runFrom);
+
+// Language toggle
+$('langbtn').addEventListener('click', toggleLang);
+})();
+</script>

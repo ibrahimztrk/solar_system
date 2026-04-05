@@ -1,0 +1,137 @@
+16:11:14 [types] Generated 0ms
+16:11:14 [content] Syncing content
+16:11:14 [content] Astro config changed
+16:11:14 [content] Clearing content store
+16:11:14 [content] Synced content
+16:11:14 [vite] Port 4321 is in use, trying another one...
+
+ astro  v5.18.1 ready in 215 ms
+
+┃ Local    http://localhost:4322/
+┃ Network  http://192.168.0.194:4322/
+           http://100.67.244.102:4322/
+
+16:11:14 watching for file changes...
+
+ update  ▶ New version of Astro available: 6.1.3
+  Run npx @astrojs/upgrade to update
+
+16:12:08 [200] / 75ms
+16:58:29 Configuration file updated. Restarting...
+16:58:29 [content] Syncing content
+16:58:29 [content] Astro config changed
+16:58:29 [content] Clearing content store
+16:58:29 [content] Synced content
+16:58:29 [types] Generated 55ms
+16:58:29 [vite] Re-optimizing dependencies because vite config has changed
+16:58:29 [vite] Port 4321 is in use, trying another one...
+17:10:25 Configuration file updated. Restarting...
+17:10:25 [content] Syncing content
+17:10:25 [content] Astro config changed
+17:10:25 [content] Clearing content store
+17:10:25 [content] Synced content
+17:10:25 [types] Generated 53ms
+17:10:25 [vite] Port 4321 is in use, trying another one...
+17:11:28 Configuration file updated. Restarting...
+17:11:28 [vite] Re-optimizing dependencies because vite config has changed
+17:11:28 [content] Syncing content
+17:11:28 [content] Astro config changed
+17:11:28 [content] Clearing content store
+17:11:28 [content] Synced content
+17:11:28 [types] Generated 45ms
+17:11:28 [vite] Re-optimizing dependencies because vite config has changed
+17:12:18 Configuration file updated. Restarting...
+17:12:18 [vite] Re-optimizing dependencies because vite config has changed
+17:12:18 [content] Syncing content
+17:12:18 [content] Astro config changed
+17:12:18 [content] Clearing content store
+17:12:18 [content] Synced content
+17:12:18 [types] Generated 53ms
+17:12:18 [vite] Re-optimizing dependencies because vite config has changed
+17:13:31 Configuration file updated. Restarting...
+17:13:31 [vite] Re-optimizing dependencies because vite config has changed
+17:13:31 [content] Syncing content
+17:13:31 [content] Synced content
+17:13:31 [types] Generated 49ms
+17:13:31 [vite] Re-optimizing dependencies because vite config has changed
+17:13:31 [vite] Port 4321 is in use, trying another one...
+17:16:04 Configuration file updated. Restarting...
+17:16:04 [vite] Re-optimizing dependencies because vite config has changed
+17:16:04 [content] Syncing content
+17:16:04 [content] Astro config changed
+17:16:04 [content] Clearing content store
+17:16:04 [content] Synced content
+17:16:04 [types] Generated 60ms
+17:16:04 [vite] Re-optimizing dependencies because vite config has changed
+17:16:04 [vite] Port 4321 is in use, trying another one...
+17:16:41 Configuration file updated. Restarting...
+17:16:41 [vite] Re-optimizing dependencies because vite config has changed
+17:16:41 [content] Syncing content
+17:16:41 [content] Synced content
+17:16:41 [types] Generated 45ms
+17:16:41 [vite] Re-optimizing dependencies because vite config has changed
+17:21:12 [200] / 37ms
+17:21:20 [200] / 3ms
+18:17:40 [watch] solar_system/index.html
+18:21:25 Configuration file updated. Restarting...
+6:21:25 PM [vite] (ssr) Error when evaluating SSR module /home/ibrahim/Documents/EYLUL/web/astro.config.mjs: Identifier '__vite_ssr_export_default__' has already been declared
+      at new AsyncFunction (<anonymous>)
+      at ESModulesEvaluator.runInlinedModule (file:///home/ibrahim/Documents/EYLUL/web/node_modules/vite/dist/node/module-runner.js:1062:11)
+      at SSRCompatModuleRunner.directRequest (file:///home/ibrahim/Documents/EYLUL/web/node_modules/vite/dist/node/module-runner.js:1284:82)
+      at SSRCompatModuleRunner.directRequest (file:///home/ibrahim/Documents/EYLUL/web/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:25274:35)
+      at SSRCompatModuleRunner.cachedRequest (file:///home/ibrahim/Documents/EYLUL/web/node_modules/vite/dist/node/module-runner.js:1179:28)
+      at SSRCompatModuleRunner.import (file:///home/ibrahim/Documents/EYLUL/web/node_modules/vite/dist/node/module-runner.js:1117:23)
+      at async instantiateModule (file:///home/ibrahim/Documents/EYLUL/web/node_modules/vite/dist/node/chunks/dep-D4NMHUTW.js:25231:12)
+      at async loadConfigWithVite (file:///home/ibrahim/Documents/EYLUL/web/node_modules/astro/dist/core/config/vite-load.js:36:17)
+      at async loadConfig (file:///home/ibrahim/Documents/EYLUL/web/node_modules/astro/dist/core/config/config.js:59:12)
+      at async resolveConfig (file:///home/ibrahim/Documents/EYLUL/web/node_modules/astro/dist/core/config/config.js:88:22)
+[astro] Unable to load your Astro config
+
+18:21:25 [ERROR] [config] Identifier '__vite_ssr_export_default__' has already been declared
+  Stack trace:
+    at new AsyncFunction (<anonymous>)
+    [...] See full stack trace in the browser, or rerun with --verbose.
+
+18:21:25 [ERROR] Continuing with previous valid configuration
+
+18:23:08 Configuration file updated. Restarting...
+18:23:08 [vite] Re-optimizing dependencies because vite config has changed
+18:23:08 [content] Syncing content
+18:23:08 [content] Astro config changed
+18:23:08 [content] Clearing content store
+18:23:08 [content] Synced content
+18:23:08 [types] Generated 43ms
+18:23:08 [vite] Re-optimizing dependencies because vite config has changed
+18:23:09 [200] / 17ms
+18:28:04 Configuration file updated. Restarting...
+18:28:04 [vite] Re-optimizing dependencies because vite config has changed
+18:28:04 [content] Syncing content
+18:28:04 [content] Astro config changed
+18:28:04 [content] Clearing content store
+18:28:04 [content] Synced content
+18:28:04 [types] Generated 42ms
+18:28:04 [vite] Re-optimizing dependencies because vite config has changed
+19:02:15 [watch] solar_system/index.html
+19:16:45 Configuration file updated. Restarting...
+19:16:45 [vite] Re-optimizing dependencies because vite config has changed
+19:16:45 [content] Syncing content
+19:16:45 [content] Astro config changed
+19:16:45 [content] Clearing content store
+19:16:45 [content] Synced content
+19:16:45 [types] Generated 52ms
+19:16:45 [vite] Re-optimizing dependencies because vite config has changed
+19:18:51 [watch] solar_system/index.html
+19:19:35 [watch] solar_system/index.html
+19:25:19 [200] / 16ms
+19:41:07 [200] / 4ms
+19:46:21 [watch] solar_system/index.html
+19:47:35 Configuration file updated. Restarting...
+19:47:35 [vite] Re-optimizing dependencies because vite config has changed
+19:47:35 [content] Syncing content
+19:47:35 [content] Synced content
+19:47:35 [types] Generated 42ms
+19:47:35 [vite] Re-optimizing dependencies because vite config has changed
+19:49:55 [200] / 18ms
+19:58:51 [watch] solar_system_interactive.html
+19:59:07 [watch] solar_system/index.html
+19:59:15 [watch] solar_system/dist/index.html
