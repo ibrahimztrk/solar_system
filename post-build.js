@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { globSync } from 'glob';
 
-const files = globSync('dist/**/*.html');
+const files = globSync('docs/**/*.html');
 for (const f of files) {
   let html = readFileSync(f, 'utf-8');
   html = html.replace(/="\/(_astro\/[^"]+)"/g, '="./$1"');
